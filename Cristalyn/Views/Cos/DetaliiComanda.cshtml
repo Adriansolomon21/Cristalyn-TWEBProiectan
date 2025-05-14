@@ -1,0 +1,44 @@
+﻿@model Cristalyn.Models.Comanda
+
+@{
+    ViewData["Title"] = "Detalii Comandă";
+}
+
+<h2 class="mb-4"><i class="bi bi-file-earmark-text"></i> Detalii Comandă #@Model.Id</h2>
+
+<div class="card shadow border-secondary">
+    <div class="card-header bg-secondary text-white">
+        <strong>Status:</strong> @Model.Status |
+        <strong>Data:</strong> @Model.Data.ToString("dd.MM.yyyy HH:mm") |
+        <strong>Email:</strong> @Model.EmailUtilizator
+    </div>
+
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Produs</th>
+                    <th>Preț</th>
+                    <th>Cantitate</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var produs in Model.Produse)
+                {
+                    <tr>
+                        <td>@produs.Nume</td>
+                        <td>@produs.Pret.ToString("0.00") MDL</td>
+                        <td>@produs.Cantitate</td>
+                        <td>@((produs.Pret * produs.Cantitate).ToString("0.00")) MDL</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="text-end fw-bold mt-3">
+            Total: @((Model.Produse.Sum(p => p.Pret * p.Cantitate)).ToString("0.00")) MDL
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,74 @@
+﻿@model List<Cristalyn.Models.Produs>
+
+@{
+    ViewData["Title"] = "Toate bijuteriile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-color: #fdf6ef; /* bej pal */
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #503d2e;
+    }
+
+    .product-price {
+        font-size: 1rem;
+        color: #6f4e37;
+    }
+
+    .btn-detail {
+        background-color: #e6d3b3;
+        border: none;
+        color: #3d2c1e;
+    }
+
+        .btn-detail:hover {
+            background-color: #d4b88a;
+            color: #000;
+        }
+
+    .card {
+        border: 1px solid #e9e2d6;
+        background-color: #fffaf5;
+    }
+
+    h2.section-title {
+        color: #3d2c1e;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+</style>
+
+<div class="container py-5">
+    <h2 class="text-center section-title">Toate bijuteriile</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center">Nu există produse disponibile.</div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var produs in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <img src="@produs.ImagineUrl" class="card-img-top p-3" style="height: 230px; object-fit: contain;" alt="@produs.Nume" />
+                        <div class="card-body text-center">
+                            <div class="product-title mb-2">@produs.Nume</div>
+                            <div class="product-price mb-3">@string.Format("{0:N0} MDL", produs.Pret)</div>
+                            <a asp-controller="Magazin" asp-action="Detalii" asp-route-id="@produs.Id" class="btn btn-detail btn-sm px-4">
+                                <i class="bi bi-eye"></i> Vezi detalii
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

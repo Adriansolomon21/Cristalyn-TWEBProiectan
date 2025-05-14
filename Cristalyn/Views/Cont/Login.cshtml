@@ -1,0 +1,19 @@
+﻿<h2 class="text-center mb-4">Autentificare</h2>
+
+<form asp-action="Login" method="post">
+    <div class="row g-3">
+        <div class="col-md-6 offset-md-3">
+            <label for="email" class="form-label">Email</label>
+            <input name="email" class="form-control" />
+        </div>
+
+        <div class="col-md-6 offset-md-3">
+            <label for="parola" class="form-label">Parolă</label>
+            <input name="parola" type="password" class="form-control" />
+        </div>
+
+        <div class="col-md-6 offset-md-3 text-end mt-3">
+            <button type="submit" class="btn btn-success">Conectare</button>
+        </div>
+    </div>
+</form>

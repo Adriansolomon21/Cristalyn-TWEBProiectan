@@ -1,0 +1,42 @@
+﻿@model Cristalyn.Models.Utilizator
+@{
+    ViewData["Title"] = "Înregistrare";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm" style="background-color: #fffaf3;">
+        <div class="card-body">
+            <h2 class="text-center mb-4">📝 Înregistrare cont nou</h2>
+
+            <form asp-action="Register" method="post" class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Nume" class="form-label">Nume</label>
+                    <input asp-for="Nume" class="form-control" placeholder="Ex: Andrei" />
+                    <span asp-validation-for="Nume" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Ex: email@exemplu.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Parola" class="form-label">Parolă</label>
+                    <input asp-for="Parola" type="password" class="form-control" placeholder="Introduceți o parolă" />
+                    <span asp-validation-for="Parola" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Confirmare parolă</label>
+                    <input type="password" name="Parola2" class="form-control" placeholder="Reintroduceți parola" />
+                    <!-- Poți adăuga validare la nevoie -->
+                </div>
+
+                <div class="col-12 text-end mt-3">
+                    <button type="submit" class="btn btn-primary px-4">Înregistrare</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

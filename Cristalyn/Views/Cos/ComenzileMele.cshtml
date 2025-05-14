@@ -1,0 +1,73 @@
+﻿@model List<Cristalyn.Models.Comanda>
+
+@{
+    ViewData["Title"] = "Comenzile mele";
+}
+@if (TempData["MesajSucces"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill"></i> @TempData["MesajSucces"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Închide"></button>
+    </div>
+}
+
+<h2 class="mb-4"><i class="bi bi-receipt"></i> Comenzile Mele</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">Nu ai comenzi salvate momentan.</div>
+}
+else
+{
+    foreach (var comanda in Model)
+    {
+        <div class="card shadow mb-4 border-primary">
+            <div class="card-header bg-primary text-white d-flex justify-content-between">
+                <div>
+                    <strong>Comanda #@comanda.Id</strong> |
+                    <span>@comanda.Data.ToString("dd.MM.yyyy HH:mm")</span>
+                </div>
+                <div>Status: <strong>@comanda.Status</strong></div>
+            </div>
+
+            <div class="card-body">
+                @if (comanda.Produse != null && comanda.Produse.Any())
+                {
+                    <table class="table table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Produs</th>
+                                <th>Preț</th>
+                                <th>Cantitate</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in comanda.Produse)
+                            {
+                                <tr>
+                                    <td>@item.Nume</td>
+                                    <td>@item.Pret.ToString("0.00") MDL</td>
+                                    <td>@item.Cantitate</td>
+                                    <td>@((item.Cantitate * item.Pret).ToString("0.00")) MDL</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <p class="fw-bold">Total comandă: @comanda.Total.ToString("0.00") MDL</p>
+                }
+                else
+                {
+                    <p><em>Nu sunt produse în această comandă.</em></p>
+                }
+
+                <div class="text-end">
+                    <a class="btn btn-outline-primary" asp-action="DetaliiComanda" asp-route-id="@comanda.Id">
+                        Vezi detalii <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+}

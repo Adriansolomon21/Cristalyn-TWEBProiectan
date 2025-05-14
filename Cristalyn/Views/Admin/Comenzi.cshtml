@@ -1,0 +1,84 @@
+﻿@model List<Cristalyn.Models.Comanda>
+@{
+    ViewData["Title"] = "Toate comenzile";
+}
+
+<h2 class="mt-4">Toate comenzile</h2>
+
+@if (TempData["Mesaj"] != null)
+{
+    <div class="alert alert-success">@TempData["Mesaj"]</div>
+}
+
+<form method="get" asp-action="Comenzi" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label class="form-label">De la:</label>
+        <input type="date" name="deLa" class="form-control" value="@Context.Request.Query["deLa"]" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Până la:</label>
+        <input type="date" name="panaLa" class="form-control" value="@Context.Request.Query["panaLa"]" />
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">Filtrează</button>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <p>Nu există comenzi în perioada selectată.</p>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Data</th>
+                <th>Email</th>
+                <th>Produse</th>
+                <th>Total</th>
+                <th>Status</th> <!-- ADĂUGAT -->
+                <th>Acțiuni</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var comanda in Model)
+            {
+                <tr>
+                    <td>@comanda.Id</td>
+                    <td>@comanda.Data.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@comanda.EmailUtilizator</td>
+                    <td>
+                        <ul class="mb-0">
+                            @foreach (var p in comanda.Produse)
+                            {
+                                <li>@p.Nume x @p.Cantitate</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>@comanda.Total MDL</td>
+                    <td>
+                        <form asp-action="ModificaStatus" method="post" class="d-flex gap-1">
+                            <input type="hidden" name="id" value="@comanda.Id" />
+                            <select name="statusNou" class="form-select form-select-sm">
+                                <option value="Nouă" selected="@("Nouă" == comanda.Status)">Nouă</option>
+                                <option value="Procesată" selected="@("Procesată" == comanda.Status)">Procesată</option>
+                                <option value="Livrată" selected="@("Livrată" == comanda.Status)">Livrată</option>
+                                <option value="Anulată" selected="@("Anulată" == comanda.Status)">Anulată</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">Salvează</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form asp-action="Sterge" method="post" asp-route-id="@comanda.Id"
+                              onsubmit="return confirm('Sigur dorești să ștergi comanda?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Șterge</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

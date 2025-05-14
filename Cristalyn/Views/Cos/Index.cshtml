@@ -1,0 +1,58 @@
+﻿@model List<Cristalyn.Models.CosItem>
+
+@{
+    ViewData["Title"] = "Coșul meu";
+}
+
+<h2 class="mb-4"><i class="bi bi-cart"></i> Coșul meu</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">Coșul este gol.</div>
+}
+else
+{
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Produs</th>
+                        <th>Preț</th>
+                        <th>Cantitate</th>
+                        <th>Total</th>
+                        <th>Acțiuni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nume</td>
+                            <td>@item.Pret.ToString("0.00") MDL</td>
+                            <td>@item.Cantitate</td>
+                            <td>@((item.Pret * item.Cantitate).ToString("0.00")) MDL</td>
+                            <td>
+                                <form asp-controller="Cos" asp-action="Sterge" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Șterge
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="text-end">
+                <p class="fw-bold fs-5">
+                    Total general: @Model.Sum(i => i.Pret * i.Cantitate).ToString("0.00") MDL
+                </p>
+                <a asp-action="Finalizeaza" class="btn btn-success">
+                    <i class="bi bi-bag-check"></i> Finalizează comanda
+                </a>
+            </div>
+        </div>
+    </div>
+}

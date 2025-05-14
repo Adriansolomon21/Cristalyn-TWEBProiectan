@@ -1,0 +1,105 @@
+﻿@model Cristalyn.Models.Produs
+@{
+    ViewData["Title"] = "Detalii produs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .product-detail-container {
+        background-color: #fdf6ee;
+        padding: 40px;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .product-image {
+        width: 100%;
+        max-height: 450px;
+        object-fit: contain;
+        border-radius: 10px;
+    }
+
+    .product-name {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .product-price {
+        font-size: 1.5rem;
+        color: #2e8b57;
+    }
+
+    .product-desc {
+        font-size: 1.1rem;
+        color: #444;
+    }
+
+    .alert-success {
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="container product-detail-container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImagineUrl" alt="@Model.Nume" class="product-image" />
+        </div>
+        <div class="col-md-6">
+            <h2 class="product-name">@Model.Nume</h2>
+            <p class="product-price">@Model.Pret.ToString("N0") MDL</p>
+            <p class="text-muted mb-1"><strong>Categorie:</strong> @Model.Categorie</p>
+            <p class="product-desc mt-3">
+                @switch (Model.Id)
+                {
+                    case 1:
+                        @:Un inel clasic cu un diamant rotund strălucitor, ideal pentru momente speciale precum logodne sau aniversări.
+                        break;
+                    case 2:
+                        @:Colierul cu cercuri duble simbolizează conexiunea dintre două suflete. Cadoul perfect pentru cineva drag.
+                        break;
+                    case 3:
+                        @:Inel floral elegant, decorat cu pietre fine pentru o notă subtilă de feminitate.
+                        break;
+                    default:
+                        @:Această bijuterie unică adaugă un plus de stil și rafinament oricărei apariții.
+                        break;
+                }
+            </p>
+
+
+            <form asp-controller="Cos" asp-action="AdaugaInCos" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-success mt-3">
+                    <i class="bi bi-cart-plus"></i> Adaugă în coș
+                </button>
+            </form>
+
+            @if (TempData["Mesaj"] != null)
+            {
+                <div class="alert alert-success">@TempData["Mesaj"]</div>
+            }
+            @if (ViewBag.ProduseSimilare != null && ((List<Produs>)ViewBag.ProduseSimilare).Any())
+            {
+                <section class="mt-5 border-top pt-4">
+                    <h4 class="mb-4 text-center text-secondary">Produse similare</h4>
+                    <div class="row row-cols-1 row-cols-md-4 g-4">
+                        @foreach (var p in (List<Produs>)ViewBag.ProduseSimilare)
+                        {
+                            <div class="col">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <img src="@p.ImagineUrl" class="card-img-top p-3" alt="@p.Nume" style="height: 200px; object-fit: contain;">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title fw-bold">@p.Nume</h6>
+                                        <p class="text-muted">@string.Format("{0:N0} MDL", p.Pret)</p>
+                                        <a asp-controller="Magazin" asp-action="Detalii" asp-route-id="@p.Id" class="btn btn-outline-dark btn-sm">Vezi detalii</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </section>
+            }
+
+        </div>
+    </div>
+</div>

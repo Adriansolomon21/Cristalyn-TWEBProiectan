@@ -1,0 +1,75 @@
+﻿@model List<Cristalyn.Models.Produs>
+@{
+    ViewData["Title"] = "Bijuterii pentru fiecare ocazie";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        overflow-x: hidden;
+    }
+
+    .card-img-top {
+        height: 230px;
+        object-fit: contain;
+    }
+
+    footer {
+        margin-top: 5rem;
+    }
+</style>
+
+<section class="text-center bg-white py-5 border-bottom">
+    <div class="container">
+        <h1 class="display-5 fw-semibold">Bijuterii pentru fiecare ocazie</h1>
+        <p class="lead text-muted">Alege-ți strălucirea perfectă din colecțiile noastre elegante și moderne.</p>
+        <a href="@Url.Action("Lista", "Magazin")" class="btn btn-danger mt-4">Vezi toate produsele</a>
+
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="mb-4 text-center fw-bold">Bijuterii noi</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+            @foreach (var produs in Model.Take(4))
+            {
+                <div class="col">
+                    <div class="card border-0 shadow-sm h-100">
+                        <img src="@produs.ImagineUrl" class="card-img-top p-3" alt="@produs.Nume">
+                        <div class="card-body text-center">
+                            <h6 class="card-title fw-semibold">@produs.Nume</h6>
+                            <p class="text-muted">@string.Format("{0:N0} LEI", produs.Pret)</p>
+                            <a asp-controller="Magazin" asp-action="Detalii" asp-route-id="@produs.Id" class="btn btn-sm btn-outline-dark">Detalii</a>
+                            
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="mb-4 fw-bold">Bijuterii populare</h2>
+        <p class="text-muted">Produsele preferate de clienții noștri, potrivite pentru orice ocazie specială.</p>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+            @foreach (var produs in Model.Skip(4).Take(8))
+            {
+                <div class="col">
+                    <div class="card border-0 shadow-sm h-100">
+                        <img src="@produs.ImagineUrl" class="card-img-top p-3" alt="@produs.Nume">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">@produs.Nume</h6>
+                            <p class="text-muted">@string.Format("{0:N0} LEI", produs.Pret)</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <a href="@Url.Action("Populare", "Magazin")" class="btn btn-danger mt-4">Vezi toate bijuteriile populare</a>
+
+    </div>
+</section>
+ 

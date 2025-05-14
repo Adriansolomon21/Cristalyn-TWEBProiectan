@@ -1,0 +1,36 @@
+﻿@model Cristalyn.Models.Produs
+
+<h2>➕ Adăugare Produs</h2>
+
+<form asp-action="AdaugaProdus" method="post">
+    <div class="form-group">
+        <label>Nume</label>
+        <input asp-for="Nume" class="form-control" />
+        <span asp-validation-for="Nume" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Preț</label>
+        <input asp-for="Pret" class="form-control" />
+        <span asp-validation-for="Pret" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Descriere</label>
+        <textarea asp-for="Descriere" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Categorie</label>
+        <input asp-for="Categorie" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>URL Imagine</label>
+        <input asp-for="ImagineUrl" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Salvează</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
