@@ -16,6 +16,7 @@ namespace Cristalyn.Models
 
         public string ImagineUrl { get; set; } = string.Empty;
 
-        public string Categorie { get; set; } = string.Empty; // ← adăugat
+        public string Categorie { get; set; } = string.Empty; // ← câmp adăugat pentru clasificare produs
+
     }
 }
