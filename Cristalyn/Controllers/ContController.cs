@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Cristalyn.Controllers
 {
+    /// <summary>
+    /// Controller for handling user account operations
+    /// </summary>
     public class ContController : Controller
     {
         private readonly CristalynContext _context;
@@ -37,7 +40,6 @@ namespace Cristalyn.Controllers
         public IActionResult Register() => View();
 
         [HttpPost]
-        [HttpPost]
         public IActionResult Register(Utilizator utilizator)
         {
             if (ModelState.IsValid)
@@ -56,7 +58,6 @@ namespace Cristalyn.Controllers
 
             return View(utilizator);
         }
-
 
         public IActionResult Logout()
         {
