@@ -18,8 +18,18 @@ namespace Cristalyn.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Afișează pagina de autentificare
+        /// </summary>
+        /// <returns>Pagina de autentificare</returns>
         public IActionResult Login() => View();
 
+        /// <summary>
+        /// Procesează cererea de autentificare
+        /// </summary>
+        /// <param name="email">Adresa de email a utilizatorului</param>
+        /// <param name="parola">Parola utilizatorului</param>
+        /// <returns>Redirecționare către pagina corespunzătoare rolului sau înapoi la login în caz de eroare</returns>
         [HttpPost]
         public IActionResult Login(string email, string parola)
         {
@@ -37,8 +47,17 @@ namespace Cristalyn.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Afișează pagina de înregistrare
+        /// </summary>
+        /// <returns>Pagina de înregistrare</returns>
         public IActionResult Register() => View();
 
+        /// <summary>
+        /// Procesează cererea de înregistrare a unui nou utilizator
+        /// </summary>
+        /// <param name="utilizator">Datele noului utilizator</param>
+        /// <returns>Redirecționare către pagina de autentificare sau înapoi la înregistrare în caz de eroare</returns>
         [HttpPost]
         public IActionResult Register(Utilizator utilizator)
         {
@@ -59,6 +78,10 @@ namespace Cristalyn.Controllers
             return View(utilizator);
         }
 
+        /// <summary>
+        /// Procesează cererea de deconectare a utilizatorului
+        /// </summary>
+        /// <returns>Redirecționare către pagina de autentificare</returns>
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
