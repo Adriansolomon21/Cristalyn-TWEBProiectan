@@ -1,25 +1,40 @@
 ﻿@model ErrorViewModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "Eroare";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h1 class="text-danger mb-4">Oops! A apărut o eroare.</h1>
+                    <h2 class="text-danger mb-4">Ne cerem scuze pentru inconveniență.</h2>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+                    @if (Model.ShowRequestId)
+                    {
+                        <p class="mb-3">
+                            <strong>ID Cerere:</strong> <code>@Model.RequestId</code>
+                        </p>
+                    }
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+                    @if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                    {
+                        <div class="alert alert-info">
+                            <h3>Mod Dezvoltare</h3>
+                            <p>
+                                Schimbarea la mediul de <strong>Dezvoltare</strong> va afișa informații mai detaliate despre eroarea apărută.
+                            </p>
+                            <p>
+                                <strong>Mediul de dezvoltare nu ar trebui activat pentru aplicațiile publicate!</strong>
+                                Poate duce la afișarea informațiilor sensibile către utilizatorii finali.
+                                Pentru depanare locală, activați mediul de <strong>Dezvoltare</strong> setând variabila de mediu <strong>ASPNETCORE_ENVIRONMENT</strong> la <strong>Development</strong>
+                                și repornind aplicația.
+                            </p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
