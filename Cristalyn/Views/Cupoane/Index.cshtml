@@ -1,0 +1,90 @@
+@model IEnumerable<Cristalyn.Models.Cupon>
+@{
+    ViewData["Title"] = "Gestionare Cupoane";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-ticket-perforated"></i> Cupoane de Reducere</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Cupon Nou
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Nu există cupoane în sistem.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Cod</th>
+                        <th>Valoare</th>
+                        <th>Tip</th>
+                        <th>Valabil De La</th>
+                        <th>Valabil Până La</th>
+                        <th>Utilizări</th>
+                        <th>Status</th>
+                        <th>Acțiuni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cupon in Model)
+                    {
+                        <tr>
+                            <td>@cupon.Cod</td>
+                            <td>
+                                @if (cupon.EsteProcentual)
+                                {
+                                    @($"{cupon.Valoare}%")
+                                }
+                                else
+                                {
+                                    @($"{cupon.Valoare:N2} MDL")
+                                }
+                            </td>
+                            <td>@(cupon.EsteProcentual ? "Procentual" : "Sumă fixă")</td>
+                            <td>@cupon.ValidDeLa.ToString("dd.MM.yyyy")</td>
+                            <td>@cupon.ValidPanaLa.ToString("dd.MM.yyyy")</td>
+                            <td>
+                                @if (cupon.NumarMaximUtilizari.HasValue)
+                                {
+                                    @($"{cupon.UtilizariCurente}/{cupon.NumarMaximUtilizari}")
+                                }
+                                else
+                                {
+                                    <span>Nelimitat</span>
+                                }
+                            </td>
+                            <td>
+                                @if (cupon.EsteValid())
+                                {
+                                    <span class="badge bg-success">Activ</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inactiv</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a asp-action="Edit" asp-route-id="@cupon.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@cupon.Id" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div> 

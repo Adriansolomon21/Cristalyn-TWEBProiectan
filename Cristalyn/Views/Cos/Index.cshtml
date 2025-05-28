@@ -56,3 +56,62 @@ else
         </div>
     </div>
 }
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Cupon de Reducere</h5>
+        <div class="input-group">
+            <input type="text" id="codCupon" class="form-control" placeholder="Introduceți codul cuponului">
+            <button class="btn btn-outline-primary" type="button" id="aplicaCupon">
+                <i class="bi bi-ticket-perforated"></i> Aplică
+            </button>
+        </div>
+        <div id="mesajCupon" class="mt-2"></div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Sumar Comandă</h5>
+        <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal:</span>
+            <span id="subtotal">@Model.Sum(i => i.Total).ToString("N2") MDL</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2" id="reducereRow" style="display: none !important;">
+            <span>Reducere:</span>
+            <span id="reducere">0.00 MDL</span>
+        </div>
+        <div class="d-flex justify-content-between">
+            <strong>Total Final:</strong>
+            <strong id="totalFinal">@Model.Sum(i => i.Total).ToString("N2") MDL</strong>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $("#aplicaCupon").click(function() {
+                var cod = $("#codCupon").val();
+                if (!cod) {
+                    $("#mesajCupon").html('<div class="alert alert-warning">Introduceți un cod de cupon</div>');
+                    return;
+                }
+
+                $.post("/Cupoane/Aplica", { cod: cod }, function(result) {
+                    if (result.succes) {
+                        $("#mesajCupon").html('<div class="alert alert-success">' + result.mesaj + '</div>');
+                        $("#reducereRow").show();
+                        $("#reducere").text(result.reducere.toFixed(2) + " MDL");
+                        
+                        var subtotal = parseFloat($("#subtotal").text());
+                        var totalFinal = subtotal - result.reducere;
+                        $("#totalFinal").text(totalFinal.toFixed(2) + " MDL");
+                    } else {
+                        $("#mesajCupon").html('<div class="alert alert-danger">' + result.mesaj + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+}

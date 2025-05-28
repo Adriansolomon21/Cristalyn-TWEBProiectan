@@ -1,0 +1,119 @@
+@model Cristalyn.Models.PuncteFidelitate
+@{
+    ViewData["Title"] = "Puncte Fidelitate";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-star"></i> Punctele Mele
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h1 class="display-4">@Model.PuncteDisponibile</h1>
+                        <p class="text-muted">puncte disponibile</p>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total acumulate:</span>
+                        <strong>@Model.PuncteAcumulate puncte</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total folosite:</span>
+                        <strong>@Model.PuncteFolosite puncte</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Valoare disponibilă:</span>
+                        <strong>@Model.ValoarePuncte MDL</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Folosește Puncte</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label for="puncteDorite">Câte puncte doriți să folosiți?</label>
+                        <input type="number" id="puncteDorite" class="form-control" 
+                               min="1" max="@Model.PuncteDisponibile" />
+                    </div>
+                    <button id="folosestePuncte" class="btn btn-primary w-100">
+                        <i class="bi bi-check-circle"></i> Folosește Puncte
+                    </button>
+                    <div id="mesajPuncte" class="mt-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-clock-history"></i> Istoric Puncte
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (!ViewBag.Comenzi.Any())
+                    {
+                        <div class="alert alert-info">
+                            Nu aveți încă nicio comandă. Faceți cumpărături pentru a acumula puncte!
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Data Comandă</th>
+                                        <th>Valoare Comandă</th>
+                                        <th>Puncte Acumulate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var comanda in ViewBag.Comenzi)
+                                    {
+                                        <tr>
+                                            <td>@comanda.Data.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td>@comanda.Total.ToString("N2") MDL</td>
+                                            <td>@((int)comanda.Total) puncte</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $("#folosestePuncte").click(function() {
+                var puncte = $("#puncteDorite").val();
+                if (!puncte || puncte < 1) {
+                    $("#mesajPuncte").html('<div class="alert alert-warning">Introduceți numărul de puncte</div>');
+                    return;
+                }
+
+                $.post("/PuncteFidelitate/Foloseste", { puncteDorite: puncte }, function(result) {
+                    if (result.succes) {
+                        $("#mesajPuncte").html('<div class="alert alert-success">' + result.mesaj + '</div>');
+                        // Redirecționăm către coș pentru a aplica reducerea
+                        window.location.href = "/Cos";
+                    } else {
+                        $("#mesajPuncte").html('<div class="alert alert-danger">' + result.mesaj + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+} 

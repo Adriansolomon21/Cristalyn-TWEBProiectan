@@ -1,4 +1,5 @@
 ﻿using Cristalyn.Data;
+using Cristalyn.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,9 @@ builder.Services.AddDbContext<CristalynContext>(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
+
+// Înregistrare servicii
+builder.Services.AddScoped<ReduceriService>();
 
 var app = builder.Build();
 
