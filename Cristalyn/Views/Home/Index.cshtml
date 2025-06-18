@@ -9,67 +9,341 @@
         overflow-x: hidden;
     }
 
-    .card-img-top {
-        height: 230px;
-        object-fit: contain;
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 6rem 0;
+        position: relative;
+        overflow: hidden;
     }
 
-    footer {
-        margin-top: 5rem;
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    .cta-button {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .section-subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+
+    .product-image {
+        height: 280px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.05);
+    }
+
+    .product-info {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .product-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .product-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .view-button {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .view-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+    }
+
+    .features-section {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 5rem 0;
+    }
+
+    .feature-card {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+        color: white;
+    }
+
+    .feature-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .feature-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .hero-section {
+            padding: 4rem 0;
+        }
     }
 </style>
 
-<section class="text-center bg-white py-5 border-bottom">
+<!-- Hero Section -->
+<section class="hero-section">
     <div class="container">
-        <h1 class="display-5 fw-semibold">Bijuterii pentru fiecare ocazie</h1>
-        <p class="lead text-muted">Alege-ți strălucirea perfectă din colecțiile noastre elegante și moderne.</p>
-        <a href="@Url.Action("Lista", "Magazin")" class="btn btn-danger mt-4">Vezi toate produsele</a>
-
+        <div class="row align-items-center">
+            <div class="col-lg-6 hero-content">
+                <h1 class="hero-title">Bijuterii pentru fiecare ocazie</h1>
+                <p class="hero-subtitle">Alege-ți strălucirea perfectă din colecțiile noastre elegante și moderne. Fiecare piesă spune o poveste unică.</p>
+                <a href="@Url.Action("Lista", "Magazin")" class="btn cta-button">
+                    <i class="bi bi-sparkles me-2"></i>
+                    Vezi toate produsele
+                </a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="bi bi-gem" style="font-size: 8rem; opacity: 0.3;"></i>
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="py-5 bg-light">
+<!-- Features Section -->
+<section class="features-section">
     <div class="container">
-        <h2 class="mb-4 text-center fw-bold">Bijuterii noi</h2>
+        <h2 class="section-title">De ce să alegi Cristalyn?</h2>
+        <p class="section-subtitle">Descoperă avantajele care ne fac speciali</p>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4 class="feature-title">Calitate Garantată</h4>
+                    <p class="feature-description">Toate bijuteriile noastre sunt confecționate din materiale premium și sunt garantate pentru calitate.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h4 class="feature-title">Livrare Rapidă</h4>
+                    <p class="feature-description">Livrare gratuită în toată România pentru comenzi peste 200 LEI. Livrare în 24-48 ore.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-heart"></i>
+                    </div>
+                    <h4 class="feature-title">Design Unic</h4>
+                    <p class="feature-description">Fiecare piesă este creată cu atenție la detalii, pentru a reflecta personalitatea ta.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- New Products Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Bijuterii noi</h2>
+        <p class="section-subtitle">Descoperă ultimele adăugiri în colecția noastră</p>
+        
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
             @foreach (var produs in Model.Take(4))
             {
                 <div class="col">
-                    <div class="card border-0 shadow-sm h-100">
-                        <img src="@produs.ImagineUrl" class="card-img-top p-3" alt="@produs.Nume">
-                        <div class="card-body text-center">
-                            <h6 class="card-title fw-semibold">@produs.Nume</h6>
-                            <p class="text-muted">@string.Format("{0:N0} LEI", produs.Pret)</p>
-                            <a asp-controller="Magazin" asp-action="Detalii" asp-route-id="@produs.Id" class="btn btn-sm btn-outline-dark">Detalii</a>
-                            
+                    <div class="product-card">
+                        <img src="@produs.ImagineUrl" class="product-image w-100" alt="@produs.Nume">
+                        <div class="product-info">
+                            <h5 class="product-title">@produs.Nume</h5>
+                            <div class="product-price">@string.Format("{0:N0} LEI", produs.Pret)</div>
+                            <a asp-controller="Magazin" asp-action="Detalii" asp-route-id="@produs.Id" class="btn view-button">
+                                <i class="bi bi-eye me-1"></i>
+                                Vezi detalii
+                            </a>
                         </div>
                     </div>
                 </div>
             }
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="@Url.Action("Lista", "Magazin")" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-grid me-2"></i>
+                Vezi toate produsele
+            </a>
         </div>
     </div>
 </section>
 
-<section class="py-5">
-    <div class="container text-center">
-        <h2 class="mb-4 fw-bold">Bijuterii populare</h2>
-        <p class="text-muted">Produsele preferate de clienții noștri, potrivite pentru orice ocazie specială.</p>
+<!-- Popular Products Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title">Bijuterii populare</h2>
+        <p class="section-subtitle">Produsele preferate de clienții noștri, potrivite pentru orice ocazie specială</p>
+        
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-            @foreach (var produs in Model.Skip(4).Take(8))
+            @foreach (var produs in Model.Skip(4).Take(6))
             {
                 <div class="col">
-                    <div class="card border-0 shadow-sm h-100">
-                        <img src="@produs.ImagineUrl" class="card-img-top p-3" alt="@produs.Nume">
-                        <div class="card-body text-center">
-                            <h6 class="card-title">@produs.Nume</h6>
-                            <p class="text-muted">@string.Format("{0:N0} LEI", produs.Pret)</p>
+                    <div class="product-card">
+                        <img src="@produs.ImagineUrl" class="product-image w-100" alt="@produs.Nume">
+                        <div class="product-info">
+                            <h5 class="product-title">@produs.Nume</h5>
+                            <div class="product-price">@string.Format("{0:N0} LEI", produs.Pret)</div>
+                            <a asp-controller="Magazin" asp-action="Detalii" asp-route-id="@produs.Id" class="btn view-button">
+                                <i class="bi bi-eye me-1"></i>
+                                Vezi detalii
+                            </a>
                         </div>
                     </div>
                 </div>
             }
         </div>
-        <a href="@Url.Action("Populare", "Magazin")" class="btn btn-danger mt-4">Vezi toate bijuteriile populare</a>
+        
+        <div class="text-center mt-5">
+            <a href="@Url.Action("Populare", "Magazin")" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-star me-2"></i>
+                Vezi toate bijuteriile populare
+            </a>
+        </div>
+    </div>
+</section>
 
+<!-- Newsletter Section -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color));">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center text-white">
+                <h3 class="mb-3">
+                    <i class="bi bi-envelope-heart me-2"></i>
+                    Rămâi conectat cu noi
+                </h3>
+                <p class="mb-4">Înscrie-te la newsletter pentru a primi cele mai noi oferte și colecții exclusive!</p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Adresa ta de email" style="border-radius: 25px 0 0 25px; border: none;">
+                            <button class="btn btn-light" type="button" style="border-radius: 0 25px 25px 0;">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
  
