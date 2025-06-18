@@ -4,22 +4,40 @@ using Cristalyn.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
+using Cristalyn.Helpers;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Cristalyn.Controllers
 {
     public class CupoaneController : Controller
     {
         private readonly CristalynContext _context;
+        private readonly IMemoryCache _cache;
+        private const string ALL_CUPOANE_CACHE_KEY = "AllCupoane";
+        private static readonly TimeSpan CACHE_DURATION = TimeSpan.FromMinutes(10);
 
-        public CupoaneController(CristalynContext context)
+        public CupoaneController(CristalynContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // GET: /Cupoane
         public IActionResult Index()
         {
-            var cupoane = _context.Cupoane.ToList();
+            if (!_cache.TryGetValue(ALL_CUPOANE_CACHE_KEY, out List<Cupon> cupoane))
+            {
+                cupoane = _context.Cupoane
+                    .AsNoTracking()
+                    .ToList();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(CACHE_DURATION)
+                    .SetPriority(CacheItemPriority.Normal);
+
+                _cache.Set(ALL_CUPOANE_CACHE_KEY, cupoane, cacheOptions);
+            }
+
             return View(cupoane);
         }
 
@@ -44,6 +62,10 @@ namespace Cristalyn.Controllers
 
                 _context.Cupoane.Add(cupon);
                 _context.SaveChanges();
+                
+                // Invalidate cache when new cupon is added
+                _cache.Remove(ALL_CUPOANE_CACHE_KEY);
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(cupon);
@@ -54,6 +76,7 @@ namespace Cristalyn.Controllers
         public IActionResult Aplica(string cod)
         {
             var cupon = _context.Cupoane
+                .AsNoTracking()
                 .FirstOrDefault(c => c.Cod == cod);
 
             if (cupon == null)
@@ -89,23 +112,6 @@ namespace Cristalyn.Controllers
                 reducere = reducere,
                 mesaj = $"Cupon aplicat cu succes! Reducere: {reducere:N2} MDL" 
             });
-        }
-    }
-
-    // Extensie pentru a lucra cu decimal în sesiune
-    public static class SessionExtensions
-    {
-        public static void SetDecimal(this ISession session, string key, decimal value)
-        {
-            session.Set(key, BitConverter.GetBytes(value));
-        }
-
-        public static decimal? GetDecimal(this ISession session, string key)
-        {
-            var data = session.Get(key);
-            if (data == null || data.Length < 8)
-                return null;
-            return BitConverter.ToDecimal(data, 0);
         }
     }
 } 

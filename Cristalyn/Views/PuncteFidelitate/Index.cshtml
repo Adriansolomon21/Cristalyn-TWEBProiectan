@@ -58,7 +58,7 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    @if (!ViewBag.Comenzi.Any())
+                    @if (ViewBag.Comenzi == null || ViewBag.Comenzi.Count == 0)
                     {
                         <div class="alert alert-info">
                             Nu aveți încă nicio comandă. Faceți cumpărături pentru a acumula puncte!

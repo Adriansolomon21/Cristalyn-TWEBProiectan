@@ -3,16 +3,22 @@ using Cristalyn.Models;
 using Cristalyn.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Cristalyn.Helpers;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Cristalyn.Controllers
 {
     public class PuncteFidelitateController : Controller
     {
         private readonly CristalynContext _context;
+        private readonly IMemoryCache _cache;
+        private const string USER_POINTS_CACHE_KEY = "UserPoints_{0}"; // {0} = email
+        private static readonly TimeSpan CACHE_DURATION = TimeSpan.FromMinutes(5);
 
-        public PuncteFidelitateController(CristalynContext context)
+        public PuncteFidelitateController(CristalynContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // GET: /PuncteFidelitate
@@ -24,21 +30,35 @@ namespace Cristalyn.Controllers
                 return RedirectToAction("Login", "Cont");
             }
 
-            var puncte = _context.PuncteFidelitate
-                .FirstOrDefault(p => p.EmailUtilizator == userEmail);
-
-            if (puncte == null)
+            var cacheKey = string.Format(USER_POINTS_CACHE_KEY, userEmail);
+            
+            if (!_cache.TryGetValue(cacheKey, out PuncteFidelitate puncte))
             {
-                puncte = new PuncteFidelitate
+                puncte = _context.PuncteFidelitate
+                    .AsNoTracking()
+                    .FirstOrDefault(p => p.EmailUtilizator == userEmail);
+
+                if (puncte == null)
                 {
-                    EmailUtilizator = userEmail,
-                    PuncteAcumulate = 0,
-                    PuncteFolosite = 0
-                };
+                    puncte = new PuncteFidelitate
+                    {
+                        EmailUtilizator = userEmail,
+                        PuncteAcumulate = 0,
+                        PuncteFolosite = 0
+                    };
+                }
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(CACHE_DURATION)
+                    .SetPriority(CacheItemPriority.High);
+
+                _cache.Set(cacheKey, puncte, cacheOptions);
             }
 
             // Obținem istoricul comenzilor pentru afișarea punctelor acumulate
+            // Cache this separately as it changes more frequently
             var comenzi = _context.Comenzi
+                .AsNoTracking()
                 .Where(c => c.EmailUtilizator == userEmail)
                 .OrderByDescending(c => c.Data)
                 .Take(5)
@@ -60,6 +80,7 @@ namespace Cristalyn.Controllers
             }
 
             var puncte = _context.PuncteFidelitate
+                .AsNoTracking()
                 .FirstOrDefault(p => p.EmailUtilizator == userEmail);
 
             if (puncte == null || puncte.PuncteDisponibile < puncteDorite)
@@ -73,6 +94,9 @@ namespace Cristalyn.Controllers
             // Salvăm în sesiune pentru a fi folosite la finalizarea comenzii
             HttpContext.Session.SetInt32("PuncteFidelitateUtilizate", puncteDorite);
 
+            // Invalidate the cache since points will be used
+            _cache.Remove(string.Format(USER_POINTS_CACHE_KEY, userEmail));
+
             return Json(new { 
                 succes = true, 
                 reducere = puncteDorite,
@@ -84,25 +108,16 @@ namespace Cristalyn.Controllers
         [HttpPost]
         public IActionResult Anuleaza()
         {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
             HttpContext.Session.Remove("PuncteFidelitateUtilizate");
+            
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                // Invalidate the cache since points usage was cancelled
+                _cache.Remove(string.Format(USER_POINTS_CACHE_KEY, userEmail));
+            }
+            
             return Json(new { succes = true });
-        }
-    }
-
-    // Extensie pentru a lucra cu int în sesiune
-    public static class SessionExtensions
-    {
-        public static void SetInt32(this ISession session, string key, int value)
-        {
-            session.Set(key, BitConverter.GetBytes(value));
-        }
-
-        public static int? GetInt32(this ISession session, string key)
-        {
-            var data = session.Get(key);
-            if (data == null || data.Length < 4)
-                return null;
-            return BitConverter.ToInt32(data, 0);
         }
     }
 } 
