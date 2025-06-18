@@ -1,0 +1,284 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Admin Dashboard - Cristalyn";
+}
+
+<style>
+    .dashboard-container {
+        padding: 2rem 0;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .action-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        text-align: center;
+        text-decoration: none;
+        color: var(--text-primary);
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        color: var(--text-primary);
+        text-decoration: none;
+    }
+
+    .action-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+        color: white;
+    }
+
+    .action-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .action-description {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .quick-actions {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .quick-actions h3 {
+        margin-bottom: 1.5rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .quick-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin: 0.25rem;
+    }
+
+    .quick-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .quick-btn.secondary {
+        background: linear-gradient(135deg, var(--secondary-color), #D97706);
+    }
+
+    .quick-btn.danger {
+        background: linear-gradient(135deg, var(--danger-color), #DC2626);
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .actions-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-gradient">
+                <i class="bi bi-shield-check me-2"></i>
+                Admin Dashboard
+            </h1>
+            <div class="text-muted">
+                <i class="bi bi-calendar me-1"></i>
+                @DateTime.Now.ToString("dd MMMM yyyy")
+            </div>
+        </div>
+
+        @if (TempData["Mesaj"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                @TempData["Mesaj"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));">
+                    <i class="bi bi-gem"></i>
+                </div>
+                <div class="stat-number">@Model.TotalProduse</div>
+                <div class="stat-label">Total Produse</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--success-color), #059669);">
+                    <i class="bi bi-box"></i>
+                </div>
+                <div class="stat-number">@Model.TotalComenzi</div>
+                <div class="stat-label">Total Comenzi</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--warning-color), #D97706);">
+                    <i class="bi bi-exclamation-circle"></i>
+                </div>
+                <div class="stat-number">@Model.ComenziNoi</div>
+                <div class="stat-label">Comenzi Noi</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--info-color), #1E40AF);">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="stat-number">@Model.TotalUtilizatori</div>
+                <div class="stat-label">Utilizatori Înregistrați</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="actions-grid">
+            <a href="@Url.Action("AdaugaProdus", "Admin")" class="action-card">
+                <div class="action-icon">
+                    <i class="bi bi-plus-circle"></i>
+                </div>
+                <div class="action-title">Adaugă Produs Nou</div>
+                <div class="action-description">Creează un nou produs în magazin cu imagine și detalii</div>
+            </a>
+
+            <a href="@Url.Action("ListaProduse", "Admin")" class="action-card">
+                <div class="action-icon">
+                    <i class="bi bi-grid"></i>
+                </div>
+                <div class="action-title">Gestionează Produse</div>
+                <div class="action-description">Vezi, editează sau șterge produsele existente</div>
+            </a>
+
+            <a href="@Url.Action("Comenzi", "Admin")" class="action-card">
+                <div class="action-icon">
+                    <i class="bi bi-list-check"></i>
+                </div>
+                <div class="action-title">Gestionare Comenzi</div>
+                <div class="action-description">Vezi și actualizează statusul comenzilor</div>
+            </a>
+
+            <a href="@Url.Action("Index", "Cupoane")" class="action-card">
+                <div class="action-icon">
+                    <i class="bi bi-ticket-perforated"></i>
+                </div>
+                <div class="action-title">Cupoane Reducere</div>
+                <div class="action-description">Creează și gestionează cupoanele de reducere</div>
+            </a>
+        </div>
+
+        <!-- Quick Actions Bar -->
+        <div class="quick-actions">
+            <h3>
+                <i class="bi bi-lightning me-2"></i>
+                Acțiuni Rapide
+            </h3>
+            
+            <a href="@Url.Action("AdaugaProdus", "Admin")" class="quick-btn">
+                <i class="bi bi-plus-circle"></i>
+                Adaugă Produs
+            </a>
+            
+            <a href="@Url.Action("Comenzi", "Admin")" class="quick-btn secondary">
+                <i class="bi bi-box"></i>
+                Vezi Comenzi
+            </a>
+            
+            <a href="@Url.Action("Index", "Cupoane")" class="quick-btn">
+                <i class="bi bi-ticket-perforated"></i>
+                Cupoane
+            </a>
+            
+            <a href="@Url.Action("Index", "Reduceri")" class="quick-btn secondary">
+                <i class="bi bi-percent"></i>
+                Reduceri
+            </a>
+            
+            <a href="@Url.Action("Index", "Home")" class="quick-btn">
+                <i class="bi bi-house"></i>
+                Pagina Principală
+            </a>
+        </div>
+    </div>
+</div> 

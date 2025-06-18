@@ -53,5 +53,26 @@ namespace Cristalyn.Models
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Categoria trebuie să aibă între 2 și 50 caractere")]
         [DisplayName("Categorie")]
         public string Categorie { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Cantitatea disponibilă în stoc
+        /// </summary>
+        [Required(ErrorMessage = "Cantitatea în stoc este obligatorie")]
+        [Range(0, 10000, ErrorMessage = "Stocul trebuie să fie între 0 și 10,000")]
+        [DisplayName("Stoc")]
+        public int Stoc { get; set; } = 0;
+
+        /// <summary>
+        /// Data când a fost adăugat produsul
+        /// </summary>
+        [DisplayName("Data adăugării")]
+        [DataType(DataType.DateTime)]
+        public DateTime DataAdaugare { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Indică dacă produsul este activ (vizibil în magazin)
+        /// </summary>
+        [DisplayName("Activ")]
+        public bool EsteActiv { get; set; } = true;
     }
 }

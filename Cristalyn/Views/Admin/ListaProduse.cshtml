@@ -1,0 +1,335 @@
+@model List<Cristalyn.Models.Produs>
+@{
+    ViewData["Title"] = "Gestionează Produse - Admin";
+}
+
+<style>
+    .products-container {
+        padding: 2rem 0;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .add-product-btn {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .add-product-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+
+    .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .product-info {
+        padding: 1.5rem;
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+
+    .product-category {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .product-stock {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+    }
+
+    .edit-btn {
+        background: linear-gradient(135deg, var(--info-color), #1E40AF);
+        color: white;
+    }
+
+    .edit-btn:hover {
+        transform: translateY(-1px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .delete-btn {
+        background: linear-gradient(135deg, var(--danger-color), #DC2626);
+        color: white;
+    }
+
+    .delete-btn:hover {
+        transform: translateY(-1px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-description {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+    }
+
+    .stats-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .page-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .page-title {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="products-container">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="bi bi-grid me-2"></i>
+                Gestionează Produse
+            </h1>
+            <a href="@Url.Action("AdaugaProdus", "Admin")" class="add-product-btn">
+                <i class="bi bi-plus-circle"></i>
+                Adaugă Produs Nou
+            </a>
+        </div>
+
+        @if (TempData["Mesaj"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                @TempData["Mesaj"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <!-- Statistics Bar -->
+        <div class="stats-bar">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">@Model.Count</div>
+                    <div class="stat-label">Total Produse</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">@Model.Count(p => p.Stoc > 0)</div>
+                    <div class="stat-label">În Stoc</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">@Model.Count(p => p.Stoc == 0)</div>
+                    <div class="stat-label">Stoc Epuizat</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">@Model.GroupBy(p => p.Categorie).Count()</div>
+                    <div class="stat-label">Categorii</div>
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="bi bi-box"></i>
+                </div>
+                <h3 class="empty-title">Nu există produse încă</h3>
+                <p class="empty-description">Începe prin a adăuga primul produs în magazinul tău.</p>
+                <a href="@Url.Action("AdaugaProdus", "Admin")" class="add-product-btn">
+                    <i class="bi bi-plus-circle"></i>
+                    Adaugă Primul Produs
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="products-grid">
+                @foreach (var produs in Model)
+                {
+                    <div class="product-card">
+                        <img src="@produs.ImagineUrl" alt="@produs.Nume" class="product-image" 
+                             onerror="this.src='/img/produse/default.jpg'">
+                        <div class="product-info">
+                            <h3 class="product-title">@produs.Nume</h3>
+                            <span class="product-category">@produs.Categorie</span>
+                            <div class="product-price">@string.Format("{0:N0} LEI", produs.Pret)</div>
+                            <div class="product-stock">
+                                <i class="bi bi-box-seam me-1"></i>
+                                Stoc: @produs.Stoc bucăți
+                                @if (produs.Stoc == 0)
+                                {
+                                    <span class="badge bg-danger ms-2">Epuizat</span>
+                                }
+                                else if (produs.Stoc < 5)
+                                {
+                                    <span class="badge bg-warning ms-2">Stoc Scăzut</span>
+                                }
+                            </div>
+                            <div class="product-actions">
+                                <a href="@Url.Action("EditeazaProdus", "Admin", new { id = produs.Id })" 
+                                   class="action-btn edit-btn">
+                                    <i class="bi bi-pencil"></i>
+                                    Editează
+                                </a>
+                                <form asp-action="StergeProdus" method="post" style="flex: 1;" 
+                                      onsubmit="return confirm('Sigur dorești să ștergi acest produs?');">
+                                    <input type="hidden" name="id" value="@produs.Id" />
+                                    <button type="submit" class="action-btn delete-btn">
+                                        <i class="bi bi-trash"></i>
+                                        Șterge
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="text-center mt-4">
+            <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-2"></i>
+                Înapoi la Dashboard
+            </a>
+        </div>
+    </div>
+</div> 
